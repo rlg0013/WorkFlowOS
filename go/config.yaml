@@ -1,0 +1,29 @@
+server:
+  port: 8080
+
+database:
+  path: "./workflowos.db"
+
+# Where the Python executor writes downloaded attachments. The Go backend serves
+# these files at /api/v1/artifacts/* so the dashboard can link the real file.
+artifacts:
+  dir: "../python/downloads"
+
+llm:
+  base_url: "https://api.groq.com/openai/v1"
+  model: "llama3-8b-8192"
+  api_key: ""  # Set via env var LLM_API_KEY
+
+agent:
+  endpoint: "http://localhost:8080/api/v1/events/ingest"
+  interval_ms: 2000
+
+crm:
+  port: 8081
+
+slack:
+  webhook_url: ""  # Set via env var SLACK_WEBHOOK_URL
+
+gmail:
+  credentials_file: "./credentials.json"
+  token_file: "./token.json"

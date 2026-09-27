@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./go
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - LLM_API_KEY=${LLM_API_KEY}
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+      - PYTHON_EXECUTOR_URL=http://executor:8082
+    volumes:
+      - ./go/config.yaml:/app/config.yaml
+      - ./go/workflowos.db:/app/workflowos.db
+      - ./credentials.json:/app/credentials.json
+      - ./token.json:/app/token.json
+    depends_on:
+      - executor
+
+  executor:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - GMAIL_CREDENTIALS=/app/credentials.json
+      - GMAIL_TOKEN=/app/token.json
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+      - CRM_URL=http://backend:8080
+    volumes:
+      - ./credentials.json:/app/credentials.json
+      - ./token.json:/app/token.json
+      - ./downloads:/app/downloads
+
+  agent:
+    build:
+      context: ./python
+      dockerfile: Dockerfile.agent
+    environment:
+      - BACKEND_URL=http://backend:8080/api/v1/events/ingest
+    depends_on:
+      - backend
+    # Note: Desktop capture needs host display/input - run natively on host instead
+
+# Run agent natively: cd python && python -m agent.capture

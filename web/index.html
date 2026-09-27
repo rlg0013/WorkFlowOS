@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>WorkFlowOS // Desktop Workflow Intelligence</title>
+  <style>
+    :root{--bg:#0d1117;--panel:#161b22;--panel2:#0f1620;--line:#30363d;--text:#e6edf3;--muted:#8b949e;--blue:#58a6ff;--green:#3fb950;--greenDim:#1f6f43;--amber:#d29922;--red:#f85149;--mono:"JetBrains Mono","Fira Code","Cascadia Code",Consolas,monospace}*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;color:var(--text);background:var(--bg);font:14px/1.55 var(--mono);min-height:100vh}body:before{content:"";pointer-events:none;position:fixed;inset:0;z-index:20;opacity:.14;background:repeating-linear-gradient(0deg,transparent 0,transparent 2px,rgba(88,166,255,.09) 3px);mix-blend-mode:screen}.shell{max-width:1200px;margin:auto;padding:22px 26px 48px}
+    header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:19px}.brand{font-size:18px;font-weight:800;letter-spacing:-.5px}.brand b{color:var(--green)}.tag{color:var(--muted);font-size:11px;margin-left:9px}.health{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:11px}.lamp{width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 10px var(--amber)}.lamp.ok{background:var(--green);box-shadow:0 0 12px var(--green)}.lamp.bad{background:var(--red);box-shadow:0 0 12px var(--red)}
+    .hero{position:relative;overflow:hidden;margin:26px 0 18px;padding:36px;border:1px solid #245b3b;background:linear-gradient(108deg,#101b20,#12251b);box-shadow:inset 0 0 80px #3fb9500b}.hero:after{content:"";position:absolute;right:-45px;top:-90px;width:340px;height:340px;border:1px solid #3fb95022;border-radius:50%;box-shadow:0 0 0 42px #3fb95009,0 0 0 84px #3fb95006}.eyebrow{color:var(--green);font-size:11px;letter-spacing:1.4px;text-transform:uppercase;font-weight:800}.hero h1{max-width:710px;font-size:34px;line-height:1.15;letter-spacing:-1.5px;margin:9px 0;color:#f0f6fc}.hero p{max-width:730px;color:#a8b4c2;margin:0}.cursor:after{content:"_";color:var(--green);animation:blink 1s steps(2,end) infinite}@keyframes blink{50%{opacity:0}}.terminal-row{display:flex;gap:9px;align-items:center;margin-top:24px}.prompt{color:var(--green);font-weight:800}.run{border:1px solid var(--green);background:var(--green);color:#07130d;padding:10px 14px;font:800 13px var(--mono);cursor:pointer}.run:hover{background:#56d87b;box-shadow:0 0 18px #3fb95044}.run:disabled{opacity:.6;cursor:wait}.hint{font-size:11px;color:var(--muted)}
+    .pipeline{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);background:var(--panel);margin-bottom:18px}.step{padding:13px 15px;border-right:1px solid var(--line);display:flex;align-items:center;gap:10px;color:var(--muted)}.step:last-child{border:0}.step i{font-style:normal;border:1px solid var(--line);width:23px;height:23px;display:grid;place-items:center;font-size:11px}.step b{color:var(--text);display:block;font-size:12px}.step span{font-size:10px}.step.current{background:#102218}.step.current i{border-color:var(--green);color:var(--green)}.step.done i{background:var(--green);border-color:var(--green);color:#06100a}
+    .layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:18px}.panel{border:1px solid var(--line);background:var(--panel);padding:20px}.panel-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.panel h2{font-size:13px;letter-spacing:.1px;margin:0;color:#f0f6fc}.muted{font-size:11px;color:var(--muted)}.terminal{background:#0d1117;border:1px solid #252c35;padding:14px}.event{display:grid;grid-template-columns:18px 1fr;gap:9px;padding:9px 0;border-bottom:1px solid #20262e}.event:last-child{border:0}.event i{font-style:normal;color:var(--green)}.event b{font-size:12px}.event span{display:block;font-size:10px;color:var(--muted)}.privacy{font-size:11px;color:#8ddbb0;border-top:1px dashed #2e5840;margin-top:14px;padding-top:13px}.privacy b{color:var(--green)}
+    .empty{text-align:center;border:1px dashed #3a454f;padding:34px 16px;color:var(--muted);font-size:12px}.empty strong{color:var(--text);display:block;margin:5px}.workflow-name{font-size:21px;line-height:1.2;letter-spacing:-.7px;margin:3px 0 16px}.badge{float:right;padding:3px 7px;font-size:10px;font-weight:800;border:1px solid}.badge.pending{color:var(--amber);border-color:#6d4b0c;background:#271d0a}.badge.approved,.badge.completed{color:var(--green);border-color:#236b41;background:#0f271a}.badge.rejected,.badge.failed{color:var(--red);border-color:#6e2b2b;background:#2d1212}.action{display:flex;gap:10px;align-items:center;border:1px solid #282f38;background:var(--panel2);padding:9px;margin-top:7px;font-size:12px}.action i{font-style:normal;color:var(--blue)}.action small{margin-left:auto;color:var(--muted);font-size:10px}.controls{display:flex;gap:8px;margin-top:16px}.control{font:800 12px var(--mono);padding:9px 11px;border:1px solid;cursor:pointer}.approve{color:#07100a;background:var(--green);border-color:var(--green)}.execute{color:#07100a;background:#63d9ff;border-color:#63d9ff}.reject{color:var(--red);background:#1b1112;border-color:#723035}.toast{margin-top:14px;padding:10px;font-size:11px;border:1px solid;display:none}.toast.show{display:block}.toast.ok{color:#8ddbb0;background:#102318;border-color:#28613e}.toast.error{color:#ffaaa5;background:#2a1213;border-color:#743436}
+    .feed{margin-top:18px}.feed-item{display:flex;gap:9px;border-top:1px solid #252c34;padding:10px 0;font-size:12px}.feed-item b{color:var(--blue)}.feed-item span{margin-left:auto;color:var(--muted);font-size:10px}.info{margin-top:18px;border-left:2px solid var(--blue);background:#111b29;padding:12px;color:#9db4ce;font-size:11px}.info b{color:var(--blue)}
+    /* ---- live run trace ---- */
+    .run{margin-top:14px;border:1px solid var(--line);background:var(--panel2)}
+    .run-head{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted);letter-spacing:.5px}
+    .rstep{display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid #20262e;font-size:12px}
+    .rstep:last-child{border-bottom:0}
+    .rstep .dot{width:22px;height:22px;border:1px solid var(--line);display:grid;place-items:center;font-size:10px;color:var(--muted)}
+    .rstep .lbl b{display:block;font-size:12px}
+    .rstep .lbl span{color:var(--muted);font-size:10px}
+    .rstep .ms{color:var(--muted);font-size:10px;white-space:nowrap}
+    .rstep.ok .dot{border-color:var(--green);color:var(--green);background:#0f271a}
+    .rstep.ok .lbl b{color:var(--green)}
+    .rstep.failed .dot{border-color:var(--red);color:var(--red);background:#2d1212}
+    .rstep.failed .lbl b{color:var(--red)}
+    .rstep.running{background:#111b29}
+    .rstep.running .dot{border-color:var(--blue);color:var(--blue);animation:pulse 1s ease-in-out infinite}
+    .rstep.running .lbl b{color:var(--blue)}
+    @keyframes pulse{50%{opacity:.35}}
+    /* ---- proof cards ---- */
+    .proofs{margin-top:18px}
+    .proof-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+    .proof{border:1px solid var(--line);background:var(--panel2);padding:13px;display:flex;flex-direction:column;gap:7px}
+    .proof .kind{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+    .proof .val{font-size:13px;font-weight:800;color:var(--text);word-break:break-all}
+    .proof .det{font-size:11px;color:var(--muted);white-space:pre-wrap;word-break:break-word;max-height:96px;overflow:auto}
+    .proof .ok{color:var(--green);font-size:10px;font-weight:800}
+    .proof .bad{color:var(--red);font-size:10px;font-weight:800}
+    .proof a.dl{display:inline-block;margin-top:2px;color:#07100a;background:var(--green);border:1px solid var(--green);padding:6px 10px;font:800 11px var(--mono);text-decoration:none}
+    .proof a.dl:hover{background:#56d87b}
+    .proof a.insp{color:var(--blue);font-size:10px}
+    .statbar{display:flex;gap:16px;font-size:11px;color:var(--muted);margin-bottom:12px;flex-wrap:wrap}
+    .statbar b{color:var(--text)}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}@media(max-width:760px){.shell{padding:15px}.hero{padding:27px 21px}.hero h1{font-size:28px}.pipeline{grid-template-columns:1fr 1fr}.step:nth-child(2){border-right:0}.step:nth-child(-n+2){border-bottom:1px solid var(--line)}.layout{grid-template-columns:1fr}.tag{display:none}.terminal-row{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body><main class="shell">
+  <header><div class="brand"><b>◈</b> WorkFlowOS <span class="tag">// desktop workflow intelligence</span></div><div class="health"><i id="lamp" class="lamp"></i><span id="connection">CHECKING LOCAL SERVICES</span></div></header>
+  <section class="hero"><div class="eyebrow">Agent console / v0.1</div><h1>Observe. Understand. Approve. <span class="cursor">Automate</span></h1><p>A local desktop agent turns repeated cross-app work into auditable automations. It records task signals—not keyboard content, screenshots, or file paths—and waits for your approval.</p><div class="terminal-row"><span class="prompt">workflowos&gt;</span><button id="runButton" class="run" onclick="runDemo()">RUN_GUIDED_DEMO</button><span class="hint">Synthetic local data · no external credentials required</span></div></section>
+  <section class="pipeline"><div class="step current" id="observe"><i>01</i><div><b>OBSERVE</b><span>task signals</span></div></div><div class="step" id="discover"><i>02</i><div><b>DISCOVER</b><span>repetition</span></div></div><div class="step" id="review"><i>03</i><div><b>REVIEW</b><span>human control</span></div></div><div class="step" id="automate"><i>04</i><div><b>AUTOMATE</b><span>verified result</span></div></div></section>
+  <section class="layout">
+    <article class="panel"><div class="panel-title"><h2>LIVE_RUN_TRACE</h2><span class="muted" id="traceState">IDLE</span></div><div id="trace"><div class="empty"><span>▣</span><strong>No run yet.</strong>Approve a workflow and press RUN_APPROVED_AUTOMATION — each action will light up here as the executor performs it.</div></div><p class="privacy"><b>PRIVACY FILTER ENABLED</b><br>PII and typed text are redacted before workflow discovery.</p></article>
+    <article class="panel"><div class="panel-title"><h2>WORKFLOW_REVIEW</h2><span id="reviewState" class="muted">AWAITING SIGNAL</span></div><div id="workflow"><div class="empty"><span>▣</span><strong>No automation is active.</strong>Run the guided demo to observe a task three times and create a draft.</div></div><div id="toast" class="toast"></div></article>
+  </section>
+  <section class="panel proofs"><div class="panel-title"><h2>PROOF_ARTIFACTS</h2><span class="muted" id="proofCount">0 ITEMS</span></div><div id="proofStat" class="statbar"></div><div id="proofs"><div class="empty"><span>▣</span><strong>No proofs yet.</strong>After a run, every artifact the automation produced appears here with a direct link.</div></div></section>
+  <section class="panel feed"><div class="panel-title"><h2>EXECUTION_LOG</h2><span id="workflowCount" class="muted">0 RECORDS</span></div><div id="log"><div class="muted">[idle] Waiting for an approved workflow.</div></div></section>
+  <section class="info"><b>HOW TO RUN:</b> Open this site at <code>http://localhost:8080</code> (not as a local HTML file). If the badge above is red, start the Backend and Executor terminals from <code>DEMO.md</code>, then refresh.</section>
+</main>
+<script>
+  const ROOT = location.port === '8080' ? location.origin : 'http://localhost:8080';
+  const API = ROOT + '/api/v1'; let workflowID = null;
+  const get = id => document.getElementById(id);
+  const escapeHTML = text => String(text ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const serviceError = 'Cannot reach WorkFlowOS. Start the backend on port 8080 and open http://localhost:8080.';
+  async function api(path, options) { try { const response = await fetch(API+path, options); const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Request rejected by local service.'); return data; } catch (error) { if (error instanceof TypeError) throw new Error(serviceError); throw error; } }
+  function toast(text, type) { const t=get('toast'); t.textContent=text; t.className='toast show '+type; }
+  function pipeline(active) { const stages=['observe','discover','review','automate']; const index=stages.indexOf(active); stages.forEach((name,i)=>get(name).className='step '+(i<index?'done':i===index?'current':'')); }
+  function addLog(text, type='') { const node=document.createElement('div'); node.className='feed-item'; node.innerHTML='<b>['+new Date().toLocaleTimeString()+']</b><div>'+escapeHTML(text)+'</div>'; get('log').prepend(node); }
+  async function check() { try { const response = await fetch(ROOT + '/healthz'); if (!response.ok) throw new Error('health check failed'); get('lamp').className='lamp ok'; get('connection').textContent='LOCAL SERVICES ONLINE'; return true; } catch (_) { get('lamp').className='lamp bad'; get('connection').textContent='LOCAL SERVER OFFLINE'; return false; } }
+  async function runDemo() { const button=get('runButton'); button.disabled=true; button.textContent='OBSERVING…'; pipeline('observe'); get('reviewState').textContent='CAPTURING TASK SIGNALS'; toast('', ''); try { const observed=await api('/demo/observe',{method:'POST'}); addLog('Observed customer-request task three times.'); pipeline('discover'); get('reviewState').textContent='GENERATING SAFE DRAFT'; const created=await api('/workflows/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sequence_id:observed.sequence_id})}); workflowID=created.workflow.id; render(created.workflow,created.spec); pipeline('review'); get('reviewState').textContent='APPROVAL REQUIRED'; toast('Candidate detected: Email → attachment → CRM → team notification. Review every action before approval.','ok'); addLog('Workflow draft generated; waiting for human approval.'); button.textContent='NEW DRAFT CREATED'; } catch (error) { toast(error.message,'error'); get('reviewState').textContent='CONNECTION ERROR'; button.textContent='RETRY_GUIDED_DEMO'; } finally { button.disabled=false; refreshLog(); } }
+  function render(workflow,spec) { const rows=(spec.actions||[]).map((action,index)=>'<div class="action"><i>'+String(index+1).padStart(2,'0')+'</i><span>'+escapeHTML(action.action.replaceAll('_',' '))+'</span><small>'+escapeHTML(action.target)+'</small></div>').join(''); let controls=''; if(workflow.status==='pending') controls='<div class="controls"><button class="control approve" onclick="approve()">APPROVE_WORKFLOW</button><button class="control reject" onclick="reject()">REJECT</button></div>'; if(workflow.status==='approved') controls='<div class="controls"><button class="control execute" onclick="execute()">RUN_APPROVED_AUTOMATION</button></div>'; get('workflow').innerHTML='<span class="badge '+escapeHTML(workflow.status)+'">'+escapeHTML(workflow.status)+'</span><div class="workflow-name">'+escapeHTML(workflow.intent)+'</div><div class="muted" style="margin-bottom:10px">PROPOSED_ACTIONS</div>'+rows+controls; }
+  /* ---- live trace rendering: every row is real data from GET /workflows/:id/steps ---- */
+  const MARK={ok:'✓',failed:'✕',running:'●'};
+  function renderTrace(steps){
+    const t=get('trace');
+    if(!steps||!steps.length){t.innerHTML='<div class="empty"><span>▣</span><strong>No run yet.</strong>Approve a workflow and press RUN_APPROVED_AUTOMATION — each action will light up here as the executor performs it.</div>';get('traceState').textContent='IDLE';return;}
+    const running=steps.filter(s=>s.status==='running').length;
+    get('traceState').textContent=running?('RUNNING '+steps.length):(steps.length+' STEP'+(steps.length===1?'':'S')+' RECORDED');
+    t.innerHTML=steps.map(s=>'<div class="rstep '+escapeHTML(s.status)+'"><span class="dot">'+(MARK[s.status]||'?')+'</span><span class="lbl"><b>'+escapeHTML(s.summary||s.status)+'</b><span>step '+s.step+' · '+escapeHTML(s.action)+' → '+escapeHTML(s.target)+'</span></span><span class="ms">'+(s.status==='running'?'running…':s.duration_ms+'ms')+'</span></div>').join('');
+  }
+  function renderProofs(proofs,meta){
+    const box=get('proofs');
+    get('proofCount').textContent=(proofs?proofs.length:0)+' ITEM'+(proofs&&proofs.length===1?'':'S');
+    get('proofStat').innerHTML=meta?('<span>workflow <b>'+escapeHTML(meta.status)+'</b></span><span>steps ok <b>'+meta.steps_ok+'/'+meta.steps_total+'</b></span>'+(meta.steps_failed?'<span style="color:var(--red)">failed <b>'+meta.steps_failed+'</b></span>':'')+(meta.executed_at?'<span>executed <b>'+new Date(meta.executed_at).toLocaleTimeString()+'</b></span>':'')):'';
+    if(!proofs||!proofs.length){box.innerHTML='<div class="empty"><span>▣</span><strong>No proofs yet.</strong>After a run, every artifact the automation produced appears here with a direct link.</div>';return;}
+    box.innerHTML='<div class="proof-grid">'+proofs.map(p=>{
+      const dl=p.href?'<a class="dl" href="'+escapeHTML(p.href)+'" download>DOWNLOAD '+escapeHTML(p.label)+'</a>':'';
+      const insp=p.kind==='crm_record'&&p.href?'':'';
+      return '<div class="proof"><span class="kind">'+escapeHTML(p.kind.replace('_',' '))+' · step '+p.step+'</span><span class="val">'+escapeHTML(p.label)+'</span><span class="det">'+escapeHTML(p.detail)+'</span>'+(p.verified?'<span class="ok">VERIFIED BY EXECUTOR</span>':'<span class="bad">STEP DID NOT COMPLETE</span>')+dl+insp+'</div>';
+    }).join('')+'</div>';
+  }
+  async function loadTrace(id){
+    if(!id)return;
+    try{const d=await api('/workflows/'+id+'/steps');renderTrace(d.steps);}catch(_){}
+    try{const p=await api('/workflows/'+id+'/proofs');renderProofs(p.proofs,p);}catch(_){}
+  }
+  let pollTimer=null;
+  function startPolling(id){stopPolling();pollTimer=setInterval(()=>loadTrace(id),400);}
+  function stopPolling(){if(pollTimer){clearInterval(pollTimer);pollTimer=null;}}
+  async function approve(){try{await api('/workflows/approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({workflow_id:workflowID,approved:true})});const data=await api('/workflows/'+workflowID);render(data.workflow,data.spec);toast('Approved. Press RUN_APPROVED_AUTOMATION to execute.','ok');addLog('Workflow approved by user.');}catch(error){toast(error.message,'error');}}
+  async function reject(){try{await api('/workflows/approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({workflow_id:workflowID,approved:false})});const data=await api('/workflows/'+workflowID);render(data.workflow,data.spec);toast('Rejected. No external action was taken.','ok');addLog('Workflow rejected by user.');}catch(error){toast(error.message,'error');}}
+  async function execute(){
+    if(!workflowID)return;
+    const id=workflowID;
+    get('traceState').textContent='RUNNING';
+    renderTrace([{step:1,action:'starting',target:'executor',status:'running',summary:'Contacting the automation executor…',duration_ms:0}]);
+    toast('Running the approved automation. Watch LIVE_RUN_TRACE.','ok');
+    addLog('Dispatching approved workflow to the executor…');
+    startPolling(id);
+    try{
+      const result=await api('/workflows/execute',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({workflow_id:id})});
+      stopPolling();
+      const data=await api('/workflows/'+id);
+      render(data.workflow,data.spec);
+      pipeline('automate');
+      const steps=result.steps||[];
+      const okCount=steps.filter(s=>s.status==='ok').length;
+      toast('Completed: '+okCount+'/'+steps.length+' actions verified. See PROOF_ARTIFACTS below.','ok');
+      steps.forEach(s=>addLog('step '+s.step+' '+(s.status==='ok'?'OK':'FAIL')+' · '+(s.summary||s.action),s.status==='ok'?'':'error'));
+      await loadTrace(id);
+    }catch(error){
+      stopPolling();
+      toast(error.message,'error');
+      addLog('Execution failed: '+error.message,'error');
+      await loadTrace(id);
+    }
+  }
+  async function refreshLog(){try{const data=await api('/workflows');const workflows=data.workflows||[];get('workflowCount').textContent=workflows.length+' RECORD'+(workflows.length===1?'':'S');const latest=workflows[0];if(latest){get('log').innerHTML=workflows.slice(0,5).map(w=>'<div class="feed-item"><b>'+escapeHTML(w.status.toUpperCase())+'</b><div>'+escapeHTML(w.intent)+'</div><span>'+new Date(w.updated_at).toLocaleTimeString()+'</span></div>').join('');if(!workflowID)workflowID=latest.id;if(latest.status==='completed'||latest.status==='failed'){if(!pollTimer)loadTrace(latest.id);}}else{get('log').innerHTML='<div class="muted">[idle] Waiting for an approved workflow.</div>';}}catch(_){}}check();refreshLog();
+</script></body></html>

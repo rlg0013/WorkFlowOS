@@ -1,0 +1,56 @@
+{
+  "prompt": "You are a senior full-stack engineer tasked with polishing the WorkFlowOS hackathon MVP into a presentable, demo-ready product. The project is an AI-powered desktop agent that observes repetitive digital workflows, recognizes intent, generates structured automations, and executes them using only free-tier APIs.\n\n## Current State\n- Go backend (Gin + SQLite + sqlx) with REST API, repetition detection, mock CRM\n- Python services: desktop capture agent (pynput/watchdog) + executor (Playwright + Gmail/Slack APIs)\n- Single-page HTML/JS approval UI (no framework, no build step)\n- LLM integration via OpenAI-compatible endpoint (Groq primary, OpenRouter fallback)\n- All free-tier, no-card-required APIs\n\n## Required Improvements\n\n### 1. Landing Page / UI - \"Understand in One Go\"\n**Goal**: A visitor should grasp the product's value proposition, demo flow, and status within 3 seconds.\n\n**Changes**:\n- Hero section with one-line pitch, live status badges, and \"Watch Demo\" / \"Try It\" CTAs\n- Visual pipeline diagram: Capture → Detect → Generate → Approve → Execute\n- Real-time activity feed showing captured events as they happen\n- Workflow cards with expandable details (intent, steps, variables)\n- One-click \"Run Demo\" button that seeds test data and walks through the flow\n- Responsive, accessible, no external dependencies\n- Typewriter/modern terminal aesthetic: monospace font, scanlines, cursor blink, green-on-dark theme\n\n### 2. DEMO.md - Clear, Runnable, Impressive\n**Goal**: A stranger can run the demo in 5 minutes and look competent presenting it.\n\n**Structure**:\n- Prerequisites checklist (copy-paste commands)\n- 3-terminal startup script (single command each)\n- Numbered demo script with exact keystrokes/clicks and expected UI states\n- Talking points per step (what to say, what to point at)\n- Fallback plans for each failure mode\n- One-liner pitch and FAQ\n- Video/GIF placeholders for async sharing\n\n### 3. Code Quality & Implementation Level\n**Goal**: Production-grade patterns where it matters for demo reliability; hacky but isolated elsewhere.\n\n**Backend (Go)**:\n- Add structured logging (slog) with correlation IDs\n- Graceful shutdown with in-flight request drain\n- Health/readiness endpoints for container orchestration\n- Input validation on all endpoints (go-playground/validator)\n- Rate limiting on /events/ingest (token bucket)\n- SQLite WAL mode + busy timeout already done; add connection pool metrics\n- OpenAPI/Swagger spec generation (swaggo)\n- Unit tests for repetition detector (table-driven)\n- Integration test against real SQLite (testcontainers or tmp DB)\n\n**Python Executor**:\n- Retry logic with exponential backoff for Gmail/Slack APIs\n- Structured logging (structlog) + correlation IDs passed from Go\n- Playwright browser pool (reuse contexts, avoid cold starts)\n- Credential validation at startup with clear error messages\n- Dry-run mode for demo rehearsal\n- Timeout budgets per action step\n\n**Python Agent**:\n- Debounce event emission (batch per 500ms)\n- Session persistence across restarts (save session_id to disk)\n- Privacy filter: redact passwords, tokens, PII before send\n- CPU/memory guard (pause capture if >80% usage)\n- System tray icon with pause/resume/quit\n\n**Shared**:\n- TypeScript definitions for WorkflowSpec (generate from Go models)\n- Shared JSON Schema for workflow spec (validate both sides)\n- Makefile / justfile for common tasks\n\n### 4. Typewriter Modern Aesthetic\n**Visual Language**:\n- Font: JetBrains Mono / IBM Plex Mono / Fira Code\n- Colors: #0d1117 bg, #161b22 panel, #30363d border, #58a6ff accent, #3fb950 success, #f85149 error, #d29922 warning, #e6edf3 text, #8b949e muted\n- Effects: subtle scanline overlay, cursor blink on active elements, typing animation for log entries, glitch hover on buttons\n- Layout: CSS Grid, fluid spacing, reduced motion respect\n- Components: terminal-style panels, progress steppers, code-block cards, toast notifications\n\n## Deliverables\n1. Updated `web/index.html` + `web/styles.css` + `web/app.js` (split from inline)\n2. Rewritten `DEMO.md`\n3. Go: `internal/logger`, `internal/middleware`, `internal/validator`, `cmd/server` improvements, `go.mod` updates\n4. Python: `executor/retry.py`, `executor/browser_pool.py`, `agent/privacy.py`, `agent/tray.py`, `requirements.txt` updates\n5. `Makefile` with targets: `dev`, `test`, `build`, `demo-seed`, `lint`\n6. `openapi.yaml` generated\n7. `docker-compose.yml` updated with healthchecks\n\n## Constraints\n- Zero paid APIs, no local models, OpenAI-compatible LLM only\n- Keep single binary Go deployment + Python executor\n- No framework on frontend (vanilla JS/HTML/CSS only)\n- Preserve existing API contracts (don't break mobile/agent clients)\n- All changes must be demo-ready in <2 hours of implementation time\n\n## Acceptance Criteria\n- `make demo-seed` populates DB with 3 realistic sequences and a pending workflow\n- `make dev` starts all 3 services with hot reload\n- Opening `/` shows hero, pipeline, live feed, and workflow cards\n- Running the DEMO.md script end-to-end succeeds without manual intervention\n- Lighthouse: Performance >90, Accessibility >95, Best Practices >90\n- No console errors in Chrome/Firefox/Safari",
+  "context": {
+    "project_root": "WorkFlowOS",
+    "tech_stack": {
+      "backend": "Go 1.21, Gin, sqlx, modernc.org/sqlite, slog",
+      "python_services": "Python 3.10+, Flask, Playwright, google-api-python-client, pynput, watchdog",
+      "frontend": "Vanilla HTML/CSS/JS, CSS Grid, CSS Variables, IntersectionObserver",
+      "llm": "OpenAI-compatible (Groq llama3-8b-8192 primary, OpenRouter fallback)",
+      "database": "SQLite with WAL mode",
+      "infrastructure": "docker-compose, Makefile"
+    },
+    "existing_files": [
+      "go/cmd/server/main.go",
+      "go/internal/config/config.go",
+      "go/internal/db/db.go",
+      "go/internal/model/models.go",
+      "go/internal/service/service.go",
+      "go/internal/handler/handler.go",
+      "go/internal/llm/client.go",
+      "go/config.yaml",
+      "python/agent/capture.py",
+      "python/executor/executor.py",
+      "python/executor/server.py",
+      "python/shared/events.py",
+      "web/index.html",
+      "SETUP.md",
+      "DEMO.md",
+      "docker-compose.yml",
+      "test_e2e.py"
+    ]
+  },
+  "output_format": {
+    "type": "file_changes",
+    "structure": {
+      "create": [],
+      "modify": [],
+      "delete": []
+    },
+    "each_change": {
+      "path": "string",
+      "content": "string",
+      "description": "string"
+    }
+  },
+  "priority_order": [
+    "web/index.html + styles.css + app.js (hero, pipeline, live feed, typewriter theme)",
+    "DEMO.md (rewrite completely)",
+    "go/internal/logger, middleware, validator, health endpoints",
+    "go/cmd/server/main.go (integrate middleware, graceful shutdown)",
+    "python/executor/retry.py, browser_pool.py",
+    "python/agent/privacy.py, tray.py, debounce",
+    "Makefile, docker-compose.yml updates",
+    "Unit/integration tests for critical paths"
+  ]
+}

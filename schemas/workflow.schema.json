@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WorkFlowOS Workflow",
+  "type": "object",
+  "required": ["intent", "trigger", "actions", "conditions", "variables"],
+  "properties": {
+    "intent": {"type": "string", "minLength": 1, "maxLength": 200},
+    "trigger": {"type": "object", "required": ["type", "source"], "properties": {"type": {"type": "string"}, "source": {"type": "string"}}},
+    "actions": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["step", "action", "target", "params"], "properties": {"step": {"type": "integer", "minimum": 1}, "action": {"type": "string", "enum": ["download_attachment", "lookup_customer", "update_customer", "send_slack_notification", "open_url", "click", "type", "wait"]}, "target": {"type": "string"}, "params": {"type": "object"}}}},
+    "conditions": {"type": "array"},
+    "variables": {"type": "object"}
+  },
+  "additionalProperties": false
+}

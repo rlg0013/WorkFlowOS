@@ -1,0 +1,10 @@
+server:
+  port: 8080
+database:
+  path: "./test.db"
+artifacts:
+  dir: "./downloads"
+llm:
+  base_url: "https://api.groq.com/openai/v1"
+  model: "llama3-8b-8192"
+  api_key: ""

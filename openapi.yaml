@@ -1,0 +1,50 @@
+openapi: 3.0.3
+info:
+  title: WorkFlowOS Local API
+  version: 0.1.0
+  description: Local-first workflow observation, approval, and automation API.
+servers:
+  - url: http://localhost:8080
+paths:
+  /healthz:
+    get:
+      summary: Liveness probe
+      responses: {'200': {description: Service is running}}
+  /readyz:
+    get:
+      summary: Readiness probe
+      responses: {'200': {description: Database is ready}, '503': {description: Dependency unavailable}}
+  /api/v1/events/ingest:
+    post:
+      summary: Ingest one privacy-filtered desktop event
+      requestBody:
+        required: true
+        content: {application/json: {schema: {$ref: '#/components/schemas/Event'}}}
+      responses: {'200': {description: Event accepted}, '400': {description: Invalid input}, '429': {description: Rate limited}}
+  /api/v1/demo/observe:
+    post:
+      summary: Seed the local, credential-free customer request demo
+      responses: {'200': {description: Candidate sequence created}}
+  /api/v1/workflows/generate:
+    post:
+      summary: Generate a reviewable workflow from a candidate
+      responses: {'200': {description: Workflow draft created}}
+  /api/v1/workflows/approve:
+    post:
+      summary: Approve or reject a workflow
+      responses: {'200': {description: Status updated}}
+  /api/v1/workflows/execute:
+    post:
+      summary: Execute an approved workflow
+      responses: {'200': {description: Execution completed}, '400': {description: Workflow not approved}}
+components:
+  schemas:
+    Event:
+      type: object
+      required: [source, action, target, session_id]
+      properties:
+        source: {type: string, maxLength: 64}
+        action: {type: string, maxLength: 64}
+        target: {type: string, maxLength: 256}
+        payload: {type: string, maxLength: 4096}
+        session_id: {type: string, maxLength: 128}

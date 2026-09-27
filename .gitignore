@@ -1,0 +1,35 @@
+# Secrets and local state - never commit these
+.env
+*.token.json
+python/token.json
+python/credentials.json
+credentials.json
+token.json
+
+# Local databases
+*.db
+*.db-wal
+*.db-shm
+
+# Automation artifacts produced by real runs (may contain customer data)
+python/downloads/
+downloads/
+test-downloads/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Go
+go/server
+go/workflowos
+*.exe
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
